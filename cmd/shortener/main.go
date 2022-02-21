@@ -7,5 +7,5 @@ import (
 
 func main() {
 	http.HandleFunc("/", app.ShortenerHandler)
-	http.ListenAndServe("localhost:8080", nil)
+	http.ListenAndServe(":8080", nil)
 }

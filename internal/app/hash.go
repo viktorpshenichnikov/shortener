@@ -1,4 +1,4 @@
-package main
+package app
 
 import (
 	"crypto/md5"
@@ -7,7 +7,7 @@ import (
 	"log"
 )
 
-func getHash(s string) string {
+func GetHash(s string) string {
 	h := md5.New()
 	io.WriteString(h, s)
 	hash := fmt.Sprintf("%x", h.Sum(nil))

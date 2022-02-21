@@ -12,6 +12,11 @@ func ShortenerHandler(w http.ResponseWriter, r *http.Request) {
 	switch r.Method {
 
 	case http.MethodPost:
+		if r.URL.Path != "/" {
+			log.Println("Bad Request: " + r.URL.Path)
+			http.Error(w, "Bad Request. Only / allowed.", http.StatusBadRequest)
+			return
+		}
 		body, err := io.ReadAll(r.Body)
 		if err != nil {
 			log.Println("Error at io.ReadAll: " + err.Error())
@@ -38,14 +43,21 @@ func ShortenerHandler(w http.ResponseWriter, r *http.Request) {
 		w.Write([]byte(shortURL))
 
 	case http.MethodGet:
+		if r.URL.Path == "/" {
+			http.Error(w, "Bar Request", http.StatusBadRequest)
+			return
+		}
 		shortURL := r.URL.Path[1:]
 		if longURL, ok := hashTable[shortURL]; ok {
 			longURL = "/" + longURL
 			w.WriteHeader(http.StatusTemporaryRedirect)
 			w.Header().Set("Location", longURL)
-			w.Write([]byte(" Location: " + longURL))
+			w.Header().Set("Content-Type", "text/plain; charset=utf-8")
+			w.Write([]byte(longURL))
+
+			//			w.Write([]byte(" Location: " + longURL))
 		} else {
-			http.Error(w, "Short URL Not Found", http.StatusNotFound)
+			http.Error(w, "Long URL Not Found", http.StatusNotFound)
 		}
 
 	default:

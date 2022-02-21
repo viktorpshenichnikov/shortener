@@ -50,8 +50,8 @@ func ShortenerHandler(w http.ResponseWriter, r *http.Request) {
 		shortURL := r.URL.Path[1:]
 		if longURL, ok := hashTable[shortURL]; ok {
 			longURL = "/" + longURL
-			w.Header().Set("Location", longURL)
 			w.WriteHeader(http.StatusTemporaryRedirect)
+			w.Header().Set("Location", longURL)
 		} else {
 			http.Error(w, "Long URL for short <"+shortURL+"> not found", http.StatusNotFound)
 		}
